@@ -21,9 +21,6 @@ let info = document.getElementById('info');
 
 let startOrStop = document.getElementById('startOrStop');
 
-let vidSave = document.getElementById('vid2');
-
-
 startOrStop.addEventListener('click', (e) => {
 
   if(startOrStop.innerText == 'Start'){
@@ -31,14 +28,11 @@ startOrStop.addEventListener('click', (e) => {
     var seconds=150;
     var timer;
     function myFunction() {
-      if(seconds < 60) { // I want it to say 1:00, not 60
+      if(seconds < 150) { // I want it to say 1:00, not 60
         document.getElementById("timer").innerHTML = seconds;
       }
       if (seconds >0 ) { // so it doesn't go to -1
          seconds--;
-      } else {
-         clearInterval(timer);
-         alert("You type X WPM");
       }
     }
       if(!timer) {
@@ -90,13 +84,23 @@ function startCamera() {
         let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
         chunks = [];
         let videoURL = window.URL.createObjectURL(blob);
-        vidSave.src = videoURL;
+        download(videoURL)
     }
   })
     .catch(function(err) {
     console.log("An error occured! " + err);
   });
 
+  function download(blob_url)
+  {
+      formData = new FormData()
+      var fileName = "video.mp4";
+      var a = document.createElement('a');
+      a.href        = blob_url;
+      a.download    = fileName;
+      a.textContent = "DOWNLOAD " + fileName;
+      a.click()
+  }
   video.addEventListener("canplay", function(ev){
     if (!streaming) {
       videoWidth = video.videoWidth;
