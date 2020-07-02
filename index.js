@@ -28,7 +28,7 @@ startOrStop.addEventListener('click', (e) => {
 
   if(startOrStop.innerText == 'Start'){
 
-    var seconds=60;
+    var seconds=150;
     var timer;
     function myFunction() {
       if(seconds < 60) { // I want it to say 1:00, not 60
@@ -68,8 +68,10 @@ function startCamera() {
     stream = s;
     video.srcObject = s;
     video.play();
-
-    let mediaRecorder = new MediaRecorder(stream);
+    let options = {
+            videoBitsPerSecond: 2500000
+          }
+    let mediaRecorder = new MediaRecorder(stream, options);
 
     let chunks = [];
 
@@ -86,7 +88,6 @@ function startCamera() {
     }
     mediaRecorder.onstop = (ev)=>{
         let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
-        console.log(blob)
         chunks = [];
         let videoURL = window.URL.createObjectURL(blob);
         vidSave.src = videoURL;
