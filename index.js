@@ -41,27 +41,7 @@ startOrStop.addEventListener('click', (e) => {
         }, 1000); // every second
       }
     startOrStop.innerText = 'Stop'
-    startCamera()
-  }else{
-    startOrStop.innerText = 'Start'
-    if (video) {
-        video.pause();
-        video.srcObject = null;
-    }
-    if (stream) {
-        stream.getVideoTracks()[0].stop();
-    }
-    streaming = false;
-  }
-})
-function startCamera() {
-  console.log("Start Camera", streaming)
-  if (streaming) return;
-  navigator.mediaDevices.getUserMedia({video: resolution, audio: false})
-    .then(function(s) {
-    stream = s;
-    video.srcObject = s;
-    video.play();
+
     let options = {
             videoBitsPerSecond: 2500000
           }
@@ -86,10 +66,17 @@ function startCamera() {
         let videoURL = window.URL.createObjectURL(blob);
         download(videoURL)
     }
-  })
-    .catch(function(err) {
-    console.log("An error occured! " + err);
-  });
+  }else{
+    startOrStop.innerText = 'Start'
+    if (video) {
+        video.pause();
+        video.srcObject = null;
+    }
+    if (stream) {
+        stream.getVideoTracks()[0].stop();
+    }
+    streaming = false;
+  }
 
   function download(blob_url)
   {
@@ -101,6 +88,21 @@ function startCamera() {
       a.textContent = "DOWNLOAD " + fileName;
       a.click()
   }
+})
+  function startCamera() {
+  console.log("Start Camera", streaming)
+  if (streaming) return;
+  navigator.mediaDevices.getUserMedia({video: resolution, audio: false})
+    .then(function(s) {
+    stream = s;
+    video.srcObject = s;
+    video.play();
+  })
+    .catch(function(err) {
+    console.log("An error occured! " + err);
+  });
+
+
   video.addEventListener("canplay", function(ev){
     if (!streaming) {
       videoWidth = video.videoWidth;
@@ -258,4 +260,5 @@ function opencvIsReady() {
   }
   info.innerHTML = '';
   initUI();
+  startCamera()
 }
